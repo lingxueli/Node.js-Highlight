@@ -8,7 +8,6 @@ http.createServer(function(req, res) {
 
 function getTitles(res){
 	fs.readFile('./titles.json', function(err, data) {
-		// data: data from titles.json
 		if (err) {
 	        handleError(res, err);
 	    }else{
