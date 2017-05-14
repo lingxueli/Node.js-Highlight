@@ -12,3 +12,8 @@ var server = net.createServer(function(socket) {
 });
 
 server.listen(8888);
+
+/*
+start the server and connect to the echo server by:
+$ telnet 127.0.0.1 8888
+*/
