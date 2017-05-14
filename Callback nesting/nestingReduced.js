@@ -27,7 +27,6 @@ function getTemplate(titles, res){
         	handleError(res, err);	      
     	}else{
     		formatHtml(data.toString(), titles, res);
-	  
     	}
 	});	
 }
