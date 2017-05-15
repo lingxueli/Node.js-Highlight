@@ -8,8 +8,15 @@ channel.subscriptions = {};
 channel.on('join', function(id, client){
 	this.clients[id] = client;
 	this.subscriptions[id] = function(senderId, message) {
-
+		// example: senderID = '', message = 'Chat has shut down';
+		if (id != senderID){
+			this.clients[id].write(message);
+		}
+		// clients: id => client, this client will receive a message: 'Chat has shut down'.
 	};
+
+	// register subscriptions[id] as the listener of 'boradcast' event
+	this.on('boradcast', this.subscriptions[id]);
 });
 
 channel.on('leave', function(id){
@@ -17,7 +24,12 @@ channel.on('leave', function(id){
 });
 
 channel.on('shutdown', function(){
+	// fire 'boradcast' event, and pass supplied arguments
+	channel.emit('broadcast', '', "Chat has shut down.\n");
 
+	// removes all listeners of the 'broadcast' event
+	// all functions used for sending message to users are removed from the listener list
+	channel.removeAllListeners('broadcast');
 });
 
 
@@ -32,9 +44,16 @@ var server = net.createServer(function(client){
 		// id: user addr, client: the Socket instance
 		channel.emit('join', id, client); 
 	});
-
+	// when data is received 
   	client.on('data', function(data) {
-  	
+  		data = data.toString();
+
+  		// if the user types shutdown\r, fire shutdown event
+  		if (data == "shutdown\r\n"){
+  			channel.emit('shutdown');
+  		}
+  		
+
   	});
 
 
