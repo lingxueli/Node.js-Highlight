@@ -8,11 +8,14 @@ channel.subscriptions = {};
 channel.on('join', function(id, client){
 	this.clients[id] = client;
 	this.subscriptions[id] = function(senderId, message) {
-		// example: senderID = '', message = 'Chat has shut down';
+		// example 1: senderID = '', message = 'Chat has shut down';
+		// example 2: senderID = the source user id, message = message from the source user
 		if (id != senderID){
 			this.clients[id].write(message);
+			// example 1: this client will receive a message: 'Chat has shut down'.
+			// example 2: this source will receive an echo message  
 		}
-		// clients: id => client, this client will receive a message: 'Chat has shut down'.
+		
 	};
 
 	// register subscriptions[id] as the listener of 'boradcast' event
@@ -52,8 +55,10 @@ var server = net.createServer(function(client){
   		if (data == "shutdown\r\n"){
   			channel.emit('shutdown');
   		}
-  		
 
+  		// if the server is shutdown, this function would not be effective
+ 		// otherwise, fire 'broadcast' event
+  		channel.emit('broadcast', id, data); 
   	});
 
 
