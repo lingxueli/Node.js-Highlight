@@ -23,7 +23,10 @@ channel.on('join', function(id, client){
 });
 
 channel.on('leave', function(id){
-
+	// remove the 'broadcast' listener of this user
+	channel.removeListener('broadcast', this.subscriptions[id]);
+	// fire broadcast, send leave message to other users 
+	channel.emit('broadcast', id, id + " has left the chat.\n");
 });
 
 channel.on('shutdown', function(){
@@ -60,7 +63,11 @@ var server = net.createServer(function(client){
  		// otherwise, fire 'broadcast' event
   		channel.emit('broadcast', id, data); 
   	});
-
-
-
+  	// when the socket is fully closed
+  	client.on('close', function(){
+  		channel.emit('leave', id)
+  	});
 });
+
+server.listen(8888);
+
