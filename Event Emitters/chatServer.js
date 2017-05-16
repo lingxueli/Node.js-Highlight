@@ -64,7 +64,7 @@ var server = net.createServer(function(client){
   		channel.emit('broadcast', id, data); 
   	});
   	// when the socket is fully closed
-  	client.on('close', function(){
+  	client.on('close', function(id){
   		channel.emit('leave', id)
   	});
 });
