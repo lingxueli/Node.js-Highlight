@@ -39,7 +39,7 @@ watcher.on('process', function process(file) {
   });
 });
 
-
+watcher.start();
 
 
 
